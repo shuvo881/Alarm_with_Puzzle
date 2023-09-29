@@ -15,7 +15,7 @@ Tops.grid(row=0, column=0, )
 
 # Label create
 lbl_title = Label(Tops, font=('arial', 70, 'bold'),
-                  text='Alarm with Puzzle game',
+                  text='Alarm with Puzzle Game',
                   bd=10,
                   bg='#59618A',
                   fg='Cornsilk',
