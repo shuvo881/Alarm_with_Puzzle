@@ -90,4 +90,79 @@ right_frame_3.grid(row=2, column=0)
 
 # ======================== Frame Creation END ===================================
 
+number_of_clicks = 0
+display_clicks = StringVar()
+display_clicks.set("Number of Clicks \n" + "0")
+
+game_state_string = StringVar()
+
+
+def update_counter():
+    global number_of_clicks, display_clicks
+    display_clicks.set("Number of Clicks \n" + str(number_of_clicks))
+
+
+def game_state_update(game_state):
+    global game_state_string
+    game_state_string.set(game_state)
+
+# ============== Button ================
+
+
+class Button_():
+    def __init__(self, text_, x, y):
+        self.enter_value = text_
+        self.text_taken = StringVar()
+        self.text_taken.set(text_)
+        self.x = x
+        self.y = y
+        self.btn_number = Button(left_frame, textvariable=self.text_taken, font=('arial', 80), bd=2,
+                                 command=lambda i=self.x, j=self.y: empty_spot_checker(i, j))
+        self.btn_number.place(x=self.x * 150, y=self.y * 150, width=150, height=150)
+
+
+def shuffle():
+    global number_of_clicks, display_clicks
+    nums = []
+    for ii in range(12):
+        ii += 1
+        if ii == 12:
+            nums.append("")
+        else:
+            nums.append(str(ii))
+
+    for ix in range(len(btn_numbers)):
+        for jy in range(len(btn_numbers[0])):
+            num = random.choice(nums)
+            btn_numbers[ix][jy].text_taken.set(num)
+            nums.remove(num)
+
+
+number_of_clicks = 0
+update_counter()
+game_state_update("")
+
+Label(right_frame_1, textvariable=display_clicks, font=('arial', 40)).place(x=0, y=10, width=480, height=160)
+
+Button(right_frame_2, text="New Game", font=('arial', 40), bd=5, command=shuffle).place(x=0, y=10, width=480,
+                                                                                        height=100)
+
+Label(right_frame_3, textvariable=game_state_string, font=('arial', 40)).place(x=0, y=10, width=480, height=100)
+
+
+btn_numbers = []
+
+name = 0
+for i in range(3):
+    btn_numbers_ = []
+    for j in range(4):
+        name += 1
+        if name == 12:
+            name = ""
+
+        btn_numbers_.append(Button_(str(name), x=j, y=i))
+    btn_numbers.append(btn_numbers_)
+
+
+
 root.mainloop()
