@@ -1,6 +1,7 @@
 import random
 import time
 from tkinter import *
+from dynamicaly_button import Button_
 
 
 # ======================== Frame Creation Start ===================================
@@ -109,16 +110,6 @@ def game_state_update(game_state):
 # ============== Button ================
 
 
-class Button_():
-    def __init__(self, text_, x, y):
-        self.enter_value = text_
-        self.text_taken = StringVar()
-        self.text_taken.set(text_)
-        self.x = x
-        self.y = y
-        self.btn_number = Button(left_frame, textvariable=self.text_taken, font=('arial', 80), bd=2,
-                                 command=lambda i=self.x, j=self.y: empty_spot_checker(i, j))
-        self.btn_number.place(x=self.x * 150, y=self.y * 150, width=150, height=150)
 
 
 def shuffle():
@@ -160,7 +151,7 @@ for i in range(3):
         if name == 12:
             name = ""
 
-        btn_numbers_.append(Button_(str(name), x=j, y=i))
+        btn_numbers_.append(Button_(left_frame, str(name), x=j, y=i))
     btn_numbers.append(btn_numbers_)
 
 
