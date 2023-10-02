@@ -1,15 +1,16 @@
-import winsound
+import pygame
 
-# Define the frequency and duration of the beep sound
-frequency = 1000  # Frequency in Hertz (1000Hz = 1kHz)
-duration = 1000   # Duration in milliseconds (1 second)
+pygame.mixer.init()
 
-# Infinite loop to play the beep sound
+def p_play():
 
-
-def alarm():
-    while True:
-        winsound.Beep(frequency, duration)
+    pygame.mixer.music.load("output.mp3")
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
+    pygame.time.delay(100)
 
 
+def p_stop():
 
+    pygame.mixer.music.stop()  # Stop the song
+    pygame.quit()
