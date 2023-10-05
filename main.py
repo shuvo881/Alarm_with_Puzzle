@@ -1,7 +1,8 @@
 import random
-import time
+from datetime import datetime
 from tkinter import *
 import alarm
+
 # ======================== Frame Creation Start ===================================
 
 
@@ -10,11 +11,13 @@ root.geometry('1350x750+0+0')
 root.title('Puzzle Game')
 root.configure(background='#59618A')
 
+alarm_time = StringVar()
+
 Tops = Frame(root, bg='#59618A', padx=2, width=1350, height=100, relief=RIDGE)
 Tops.grid(row=0, column=0, )
 
 # Label create
-lbl_title = Label(Tops, font=('arial', 70, 'bold'),
+lbl_title = Label(Tops, font=('arial', 40, 'bold'),
                   text='Alarm with Puzzle Game',
                   bd=10,
                   bg='#59618A',
@@ -54,16 +57,25 @@ right_frame = Frame(main_frame,
                     )
 right_frame.pack(side=RIGHT)
 
+# time frame
+time_frame = Frame(right_frame,
+                   bg='#525FA0',
+                   bd=10,
+                   width=140,
+                   height=10,
+                   relief=RIDGE
+                   )
+time_frame.grid(row=0, column=0)
+
 # right1 frame create
 right_frame_1 = Frame(right_frame,
                       bd=10,
                       width=540,
-                      height=200,
-                      padx=10,
+                      height=100,
                       pady=2,
                       relief=RIDGE
                       )
-right_frame_1.grid(row=0, column=0)
+right_frame_1.grid(row=1, column=0)
 
 # right2 frame create
 right_frame_2 = Frame(right_frame,
@@ -74,7 +86,7 @@ right_frame_2 = Frame(right_frame,
                       pady=2,
                       relief=RIDGE
                       )
-right_frame_2.grid(row=1, column=0)
+right_frame_2.grid(row=2, column=0)
 
 # right2 frame create
 right_frame_3 = Frame(right_frame,
@@ -85,20 +97,19 @@ right_frame_3 = Frame(right_frame,
                       pady=2,
                       relief=RIDGE
                       )
-right_frame_3.grid(row=2, column=0)
+right_frame_3.grid(row=3, column=0)
 
 # ======================== Frame Creation END ===================================
 
 number_of_clicks = 0
 display_clicks = StringVar()
-display_clicks.set("Number of Clicks \n" + "0")
 
 game_state_string = StringVar()
 
 
 def update_counter():
     global number_of_clicks, display_clicks
-    display_clicks.set("Number of Clicks \n" + str(number_of_clicks))
+    display_clicks.set("Number of Clicks: " + str(number_of_clicks))
 
 
 def game_state_update(game_state):
@@ -108,8 +119,13 @@ def game_state_update(game_state):
 
 # ============== Button ================
 def shuffle():
+    hr, mint = map(int, alarm_time.get().split(':'))
+
+    while True:
+        if hr == datetime.now().hour and mint == datetime.now().minute:
+            break
     global number_of_clicks, display_clicks
-    game_state_update("Start Game")
+    game_state_update("Start game with alarm")
     alarm.p_play()
     nums = []
     for ii in range(12):
@@ -141,12 +157,12 @@ class Button_:
 update_counter()
 game_state_update("")
 
-Label(right_frame_1, textvariable=display_clicks, font=('arial', 40)).place(x=0, y=10, width=480, height=160)
+Label(right_frame_1, textvariable=display_clicks, font=('arial', 20)).place(x=0, y=10, width=500, height=70)
 
-Button(right_frame_2, text="New Game", font=('arial', 40), bd=5, command=shuffle).place(x=0, y=10, width=480,
-                                                                                        height=100)
+Entry(right_frame_2, textvariable=alarm_time, font=('comic sans', 18)).grid(row=0, column=0)
+Button(right_frame_2, text="Set", font=('arial', 20), bd=5, command=shuffle).grid(row=0, column=1)
 
-Label(right_frame_3, textvariable=game_state_string, font=('arial', 40)).place(x=0, y=10, width=480, height=100)
+Label(right_frame_3, textvariable=game_state_string, font=('arial', 20)).place(x=0, y=10, width=480, height=100)
 
 btn_numbers = []
 
@@ -212,7 +228,19 @@ def win_check():
         alarm.p_stop()
 
 
-
 print(WIN_STATUS)
+
+
+def update_time():
+    current_time = datetime.now().strftime("%H:%M:%S")
+    time_label.config(text=current_time)
+    root.after(1000, update_time)  # Update every 1000 milliseconds (1 second)
+
+
+time_label = Label(time_frame, font=("Helvetica", 20))
+time_label.pack(padx=1, pady=1)
+update_time()  # Start the time update loop
+# shuffle()
+
 
 root.mainloop()
