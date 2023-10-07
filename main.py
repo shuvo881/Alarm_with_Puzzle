@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 from tkinter import *
 import alarm
+import time
 
 # ======================== Frame Creation Start ===================================
 
@@ -39,7 +40,7 @@ main_frame.grid(row=1, column=0, padx=20)
 # left frame create
 left_frame = Frame(main_frame,
                    bd=10,
-                   width=650,
+                   width=500,
                    height=470,
                    pady=2,
                    relief=RIDGE
@@ -51,7 +52,7 @@ right_frame = Frame(main_frame,
                     bd=10,
                     width=500,
                     height=470,
-                    padx=1,
+                    padx=5,
                     pady=2,
                     relief=RIDGE
                     )
@@ -119,22 +120,31 @@ def game_state_update(game_state):
 
 # ============== Button ================
 def shuffle():
-    hr, mint = map(int, alarm_time.get().split(':'))
-
+    try:
+        hr, mint = map(int, alarm_time.get().split(':'))
+    except:
+        game_state_update("Time formate not match (HH:MM)")
+        return
+    game_state_update('Alarm set successful')
     while True:
+        update_time()
+        root.update()
         if hr == datetime.now().hour and mint == datetime.now().minute:
             break
+        time.sleep(1)
+    print("yes")
     global number_of_clicks, display_clicks
     game_state_update("Start game with alarm")
     alarm.p_play()
     nums = []
-    for ii in range(12):
+    for ii in range(9):
         ii += 1
-        if ii == 12:
+        if ii == 9:
             nums.append("")
         else:
             nums.append(str(ii))
 
+    # shafful butoon
     for ix in range(len(btn_numbers)):
         for jy in range(len(btn_numbers[0])):
             num = random.choice(nums)
@@ -155,7 +165,7 @@ class Button_:
 
 
 update_counter()
-game_state_update("")
+game_state_update("Let's enter alarm time")
 
 Label(right_frame_1, textvariable=display_clicks, font=('arial', 20)).place(x=0, y=10, width=500, height=70)
 
@@ -170,9 +180,9 @@ btn_numbers = []
 name = 0
 for i in range(3):  # 3 is number of row
     btn_numbers_ = []
-    for j in range(4):  # 4 is # column
+    for j in range(3):  # 3 is # column
         name += 1
-        if name == 12:
+        if name == 9:
             name = ""
 
         btn_numbers_.append(Button_(left_frame, str(name), x=j, y=i))
@@ -180,11 +190,10 @@ for i in range(3):  # 3 is number of row
 
 
 def empty_spot_checker(y, x):
-    print(WIN_STATUS)
     global btn_numbers, number_of_clicks
 
     if not btn_numbers[x][y].text_taken.get() == "":
-        for i in range(-1, 2):
+        for i in range(-1, 2):  # -1,0,1
             new_x = x + i
 
             if not (new_x < 0 or len(btn_numbers) - 1 < new_x or i == 0):
@@ -208,13 +217,7 @@ def empty_spot_checker(y, x):
         update_counter()
 
 
-global WIN_STATUS
-
-WIN_STATUS = False
-
-
 def win_check():
-    global WIN_STATUS
     won = True  # Assume the player has won initially
     for y in range(len(btn_numbers)):
         for x in range(len(btn_numbers[y])):
@@ -223,12 +226,9 @@ def win_check():
                 break
 
     if won:
-        game_state_update("You are winner!")
+        game_state_update("You are a winner!")
         WIN_STATUS = True
         alarm.p_stop()
-
-
-print(WIN_STATUS)
 
 
 def update_time():
